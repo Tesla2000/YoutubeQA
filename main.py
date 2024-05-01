@@ -4,6 +4,7 @@ import scrapetube
 
 from logic.add_questions_and_answers import add_questions_and_answers
 from logic.add_videos_to_db import add_videos_to_db
+from logic.create_lesson import create_lessons
 
 
 def main() -> None:
@@ -11,6 +12,7 @@ def main() -> None:
     videos = tuple(scrapetube.get_playlist(playlist_id))
     add_videos_to_db(videos)
     add_questions_and_answers()
+    create_lessons()
 
 
 if __name__ == "__main__":

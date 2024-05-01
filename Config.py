@@ -13,11 +13,12 @@ class Config:
     db_password = os.getenv("POSTGRES_PASSWORD")
     db_username = os.getenv("POSTGRES_USER")
     root = Path(__file__).parent
+    output_lesson_directory = root / "output_lessons"
     concurrent_transcription_threads = 5
     concurrent_question_answers_threads = 20
 
 
 for variable in dir(Config):
     value = getattr(Config, variable)
-    if isinstance(value, Path) and value.is_dir():
-        value.mkdir(parents=True, exist_ok=True)
+    if isinstance(value, Path) and value.suffix == "" and not value.exists():
+        value.mkdir(parents=True)
