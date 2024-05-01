@@ -1,16 +1,29 @@
 from __future__ import annotations
 
+from threading import Thread
+
 import scrapetube
-from sqlalchemy import Table
-from youtube_transcript_api import YouTubeTranscriptApi
+from tqdm import tqdm
 
 from Config import Config
+from database.session import session
+from logic.add_video_to_db import add_video_to_db
+
+
+def main() -> None:
+    playlist_id = "PLWBKAf81pmOaP9naRiNAqug6EBnkPakvY"
+    videos = tuple(scrapetube.get_playlist(playlist_id))
+    for start in tqdm(range(0, len(videos), Config.concurrent_threads)):
+        threads = tuple(
+            Thread(target=add_video_to_db, args=(video,), daemon=True)
+            for video in videos[start : start + Config.concurrent_threads]
+        )
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+        session.commit()
+
 
 if __name__ == "__main__":
-    pass
-    # videos = scrapetube.get_playlist("PLWBKAf81pmOaP9naRiNAqug6EBnkPakvY")
-    #
-    # for video in videos:
-    #     print(video['videoId'])
-    #     print(YouTubeTranscriptApi.get_transcript("https://www.youtube.com/watch?v=19QaJnFm0ew"))
-    #     print(" ".join(item["text"] for item in [{'text': 'hello this is a bit of a meta sewed for', 'start': 9.62, 'duration': 7.6}, {'text': 'this series kind of explaining the plan', 'start': 14.07, 'duration': 4.77}, {'text': 'and what I want to do with this', 'start': 17.22, 'duration': 5.67}, {'text': 'so I stream programming several times a', 'start': 18.84, 'duration': 7.529}, {'text': 'week at least once on Twitch and very', 'start': 22.89, 'duration': 5.19}, {'text': 'frequently I get asked questions in chat', 'start': 26.369, 'duration': 4.111}, {'text': 'which I like to explain I really like to', 'start': 28.08, 'duration': 5.249}, {'text': 'explain stuff and so usually we drill', 'start': 30.48, 'duration': 4.14}, {'text': 'the stream and spend a bunch of time', 'start': 33.329, 'duration': 3.421}, {'text': 'explaining some kind of concept whether', 'start': 34.62, 'duration': 4.83}, {'text': "it's in Python or docx or whatever I'm", 'start': 36.75, 'duration': 5.64}, {'text': 'working on at the time and I usually go', 'start': 39.45, 'duration': 5.22}, {'text': 'into you know extreme detail about the', 'start': 42.39, 'duration': 6.0}, {'text': 'topics and I figure it would be kind of', 'start': 44.67, 'duration': 5.43}, {'text': 'a good idea to record those and then', 'start': 48.39, 'duration': 4.079}, {'text': 'share those out with everyone else but', 'start': 50.1, 'duration': 3.75}, {'text': "in a format that's not you know", 'start': 52.469, 'duration': 3.211}, {'text': 'distracted by twitch streaming and all', 'start': 53.85, 'duration': 4.139}, {'text': 'that other stuff and so the plan for', 'start': 55.68, 'duration': 5.219}, {'text': 'this sort of series or at least assuming', 'start': 57.989, 'duration': 4.201}, {'text': "it's a series who knows I might make", 'start': 60.899, 'duration': 2.73}, {'text': 'three episodes of this then just say it', 'start': 62.19, 'duration': 5.039}, {'text': "that's it no more playing for this is to", 'start': 63.629, 'duration': 5.461}, {'text': 'take questions and then explain them in', 'start': 67.229, 'duration': 3.75}, {'text': 'detail and kind of deep dive into', 'start': 69.09, 'duration': 4.709}, {'text': 'various topics in programming stuff it', 'start': 70.979, 'duration': 4.201}, {'text': 'might not just be programming stuff -', 'start': 73.799, 'duration': 3.36}, {'text': 'who knows I might explain my stream', 'start': 75.18, 'duration': 4.2}, {'text': 'setup or other stuff like that but the', 'start': 77.159, 'duration': 4.261}, {'text': 'hope is that you guys will send me some', 'start': 79.38, 'duration': 4.71}, {'text': "questions or you know I'll just generate", 'start': 81.42, 'duration': 6.809}, {'text': 'fake questions and answer myself but', 'start': 84.09, 'duration': 5.25}, {'text': "well we'll deep dive a bunch of", 'start': 88.229, 'duration': 3.39}, {'text': 'programming topics and then you know I', 'start': 89.34, 'duration': 4.56}, {'text': 'have some videos for that and the other', 'start': 91.619, 'duration': 3.54}, {'text': 'reason I want to make this separate', 'start': 93.9, 'duration': 4.7}, {'text': 'episode from the rest of everything is I', 'start': 95.159, 'duration': 5.431}, {'text': 'spend a bunch of time watching YouTube', 'start': 98.6, 'duration': 4.57}, {'text': 'and I absolutely hate when the start of', 'start': 100.59, 'duration': 5.88}, {'text': 'the YouTube video is like you know three', 'start': 103.17, 'duration': 4.589}, {'text': 'minutes of fluff and then you actually', 'start': 106.47, 'duration': 3.63}, {'text': 'get into the content so the plan is to', 'start': 107.759, 'duration': 4.441}, {'text': 'put all of the fluff in this video and', 'start': 110.1, 'duration': 4.65}, {'text': 'then we can just jump directly into', 'start': 112.2, 'duration': 4.59}, {'text': 'learning content as soon as possible in', 'start': 114.75, 'duration': 5.64}, {'text': "the other videos I'm planning to record", 'start': 116.79, 'duration': 5.429}, {'text': 'these kind of as just like one take', 'start': 120.39, 'duration': 4.65}, {'text': 'because that makes editing easier I know', 'start': 122.219, 'duration': 5.22}, {'text': 'it might eventually change is like I get', 'start': 125.04, 'duration': 3.87}, {'text': 'better at this like YouTube thing but', 'start': 127.439, 'duration': 4.231}, {'text': "for now I'm just gonna do one take and", 'start': 128.91, 'duration': 5.32}, {'text': "hopefully it's good enough but yeah if", 'start': 131.67, 'duration': 4.629}, {'text': 'you guys have ideas for topics please', 'start': 134.23, 'duration': 4.05}, {'text': 'let me know either in the comments on', 'start': 136.299, 'duration': 5.041}, {'text': 'this video or you know if you join the', 'start': 138.28, 'duration': 4.59}, {'text': 'streams on Twitch you can ask questions', 'start': 141.34, 'duration': 3.69}, {'text': "there and I'll hopefully record", 'start': 142.87, 'duration': 3.63}, {'text': 'interesting questions or ones that come', 'start': 145.03, 'duration': 3.299}, {'text': 'up pretty often and you know slap', 'start': 146.5, 'duration': 3.84}, {'text': 'together a video for those but yeah', 'start': 148.329, 'duration': 3.78}, {'text': 'thank you all for watching and hope you', 'start': 150.34, 'duration': 4.729}, {'text': 'guys enjoy the series', 'start': 152.109, 'duration': 2.96}, {'text': 'you', 'start': 167.02, 'duration': 2.06}]))
+    main()

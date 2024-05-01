@@ -12,7 +12,6 @@ os.system(f"docker container start {Config.db_name}")
 
 engine = create_engine(
     f"postgresql://{Config.db_username}:{Config.db_password}@localhost:5432/{Config.db_name}",
-    echo=True,
 )
 session = create_session(engine)
 

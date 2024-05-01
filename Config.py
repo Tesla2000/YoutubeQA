@@ -13,6 +13,7 @@ class Config:
     db_password = os.getenv("POSTGRES_PASSWORD")
     db_username = os.getenv("POSTGRES_USER")
     root = Path(__file__).parent
+    concurrent_threads = 5
 
 
 for variable in dir(Config):
