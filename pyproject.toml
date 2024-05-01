@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "ytscrap"
+version = "0.1.0"
+description = ""
+authors = ["Tesla2000 <fratajczak124@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pre-commit = "^3.7.0"
+black = "^24.4.2"
+dynamic-executor = "^1.2.6"
+youtube-transcript-api = "^0.6.2"
+scrapetube = "^2.5.1"
+psycopg2-binary = "^2.9.9"
+python-dotenv = "^1.0.1"
+SQLAlchemy = {extras = ["mypy"], version = "^2.0.29"}
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

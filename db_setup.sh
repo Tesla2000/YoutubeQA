@@ -1,0 +1,1 @@
+docker run --name YTScrap --env-file .env -p 5432:5432 postgres
