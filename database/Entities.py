@@ -34,10 +34,10 @@ class Text(Base):
     __tablename__ = "text"
     id: Mapped[int] = mapped_column("id", Integer, primary_key=True)
     text: Mapped[str] = mapped_column("text", String)
-    start_time_ms: Mapped[int] = mapped_column("start_time", Integer)
-    duration_ms: Mapped[int] = mapped_column("duration", Integer)
-    end_time_ms: Mapped[int] = mapped_column(
-        "end_time", Integer, Computed("start_time + duration"), init=False
+    start_time_ms: Mapped[float] = mapped_column("start_time", Float)
+    duration_ms: Mapped[float] = mapped_column("duration", Float)
+    end_time_ms: Mapped[float] = mapped_column(
+        "end_time", Float, Computed("start_time + duration"), init=False
     )
 
     video_id: Mapped[str] = mapped_column(ForeignKey("video.id"))
