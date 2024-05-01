@@ -26,8 +26,8 @@ def add_video_to_db(video: dict[str, Any], commit: bool = False) -> None:
     texts = list(
         Text(
             text=item["text"],
-            start_time_ms=int(1000 * item["start"]),
-            duration_ms=int(1000 * item["duration"]),
+            start_time=item["start"],
+            duration=item["duration"],
         )
         for item in transcript
     )
