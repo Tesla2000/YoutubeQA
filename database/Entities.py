@@ -26,13 +26,15 @@ class Video(Base):
         back_populates="video", cascade="all, delete-orphan"
     )
     qas: Mapped[List["QA"]] = relationship(
-        back_populates="video", cascade="all, delete-orphan"
+        back_populates="video", cascade="all, delete-orphan", default_factory=list
     )
 
 
 class Text(Base):
     __tablename__ = "text"
-    id: Mapped[int] = mapped_column("id", Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(
+        "id", Integer, primary_key=True, autoincrement=True, init=False
+    )
     text: Mapped[str] = mapped_column("text", String)
     start_time: Mapped[float] = mapped_column("start_time", Float)
     duration: Mapped[float] = mapped_column("duration", Float)
@@ -40,18 +42,20 @@ class Text(Base):
         "end_time", Float, Computed("start_time + duration"), init=False
     )
 
-    video_id: Mapped[str] = mapped_column(ForeignKey("video.id"))
-    video: Mapped[Video] = relationship(back_populates="texts")
+    video_id: Mapped[str] = mapped_column(ForeignKey("video.id"), init=False)
+    video: Mapped[Video] = relationship(back_populates="texts", init=False)
 
 
 class QA(Base):
     __tablename__ = "QA"
-    id: Mapped[int] = mapped_column("id", Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(
+        "id", Integer, primary_key=True, autoincrement=True, init=False
+    )
     question: Mapped[str] = mapped_column("question", String)
     answer: Mapped[str] = mapped_column("answer", String)
 
-    video_id: Mapped[str] = mapped_column(ForeignKey("video.id"))
-    video: Mapped[Video] = relationship(back_populates="qas")
+    video_id: Mapped[str] = mapped_column(ForeignKey("video.id"), init=False)
+    video: Mapped[Video] = relationship(back_populates="qas", init=False)
 
 
 Base.metadata.create_all(engine)
