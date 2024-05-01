@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import Any
-from typing import Union
 
 from sqlalchemy import select
 from youtube_transcript_api import NoTranscriptFound
@@ -25,7 +24,11 @@ def add_video_to_db(video: dict[str, Any], commit: bool = False) -> None:
     except NoTranscriptFound:
         return
     texts = list(
-        Text(text=item["text"], start_time=item["start"], duration=item["duration"])
+        Text(
+            text=item["text"],
+            start_time_ms=int(1000 * item["start"]),
+            duration_ms=int(1000 * item["duration"]),
+        )
         for item in transcript
     )
     video_instance = Video(
