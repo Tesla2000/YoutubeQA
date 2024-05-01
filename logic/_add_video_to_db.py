@@ -11,7 +11,7 @@ from database.Entities import Video
 from database.session import session
 
 
-def add_video_to_db(video: dict[str, Any], commit: bool = False) -> None:
+def _add_video_to_db(video: dict[str, Any], commit: bool = False) -> None:
     video_id = video["videoId"]
     if session.execute(select(Video.id).where(Video.id == video_id)).fetchall():
         return

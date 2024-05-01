@@ -2,55 +2,41 @@ from __future__ import annotations
 
 from itertools import chain
 from itertools import filterfalse
+from threading import Thread
+from typing import Optional
+from typing import Sequence
 
-from langchain_community.document_transformers import DoctranQATransformer
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sqlalchemy import select
+from tqdm import tqdm
 
-from database.Entities import QA
-from database.Entities import Text
+from Config import Config
 from database.Entities import Video
 from database.session import session
+from logic._add_questions_and_answers import _add_questions_and_answers
 
 
-def add_questions_and_answers() -> None:
-    llm = DoctranQATransformer(openai_api_model="gpt-3.5-turbo")
-    splitter = RecursiveCharacterTextSplitter(chunk_size=4000)
-
-    for video in filterfalse(lambda video: video.qas, _get_videos()):
-        if video.qas:
-            continue
-        video_text = _extract_text(video.id)
-        docs = splitter.create_documents([video_text])
-        qa_docs = llm.transform_documents(docs)
-        question_answer_pairs = tuple(
-            chain.from_iterable(
-                doc.metadata["questions_and_answers"] for doc in qa_docs
-            )
+def add_questions_and_answers(videos: Optional[Sequence[Video]] = None) -> None:
+    if videos is None:
+        videos = _get_videos()
+    videos = tuple(filterfalse(lambda video: video.qas, videos))
+    step = Config.concurrent_question_answers_threads
+    for start in tqdm(
+        range(0, len(videos), step),
+        desc="Adding questions and answers...",
+    ):
+        threads = tuple(
+            Thread(target=_add_questions_and_answers, args=(video,), daemon=True)
+            for video in videos[start : start + step]
         )
-        qas = list(
-            QA(question=pair["question"], answer=pair["answer"])
-            for pair in question_answer_pairs
-        )
-        session.add_all(qas)
-        video.qas = qas
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
         session.commit()
 
 
-def _get_videos() -> chain[Video]:
-    return chain.from_iterable(session.execute(select(Video)).fetchall())
-
-
-def _extract_text(video_id: str) -> str:
-    return " ".join(
-        chain.from_iterable(
-            session.execute(
-                select(Text.text)
-                .where(Text.video_id == video_id)
-                .order_by(Text.start_time)
-            ).fetchall()
-        )
-    )
+def _get_videos() -> Sequence[Video]:
+    return tuple(chain.from_iterable(session.execute(select(Video)).fetchall()))
 
 
 if __name__ == "__main__":
