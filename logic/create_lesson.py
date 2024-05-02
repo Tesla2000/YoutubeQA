@@ -9,19 +9,38 @@ from Config import Config
 from database.Entities import Video
 from database.session import session
 
-_python_template = """
+_python_template = r"""import random
+import langchain_openai
+import langchain_core
 def generate_questions() -> list[str]:
-    return {question_list}
+    questions = {question_list}
+    return random.sample(questions, min(len(questions), 5))
 
 
 def generate_answers(question: str, answer: str, _: str) -> bool | str:
-    return True
+    reference_answers = dict(zip({question_list}, {answer_list}))
+    chat = langchain_openai.ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0)
+    chat_answer = chat.invoke(
+        [
+            langchain_core.messages.SystemMessage(content="You will be given question, reference answer pair and users answer. "
+                                  'You have to decide if the answer is correct. '
+                                  'If it is respond with a single work "Correct" otherwise return a hint about the answer. '),
+            langchain_core.messages.SystemMessage(content='The question: ' + question + '\n'
+                                  'The reference answer: ' + reference_answers[question]),
+            langchain_core.messages.HumanMessage(
+                content=answer
+            )
+        ]
+    ).content
+    if chat_answer.startswith("Correct"):
+        return True
+    return chat_answer
 """
 
 
 def create_lessons() -> None:
     for video in chain.from_iterable(session.execute(select(Video)).fetchall()):
-        title = video.title.replace("/", "")
+        title = video.title.replace("/", "").replace(".", "")
         Config.output_lesson_directory.joinpath("approved_lessons").joinpath(
             title
         ).with_suffix(".json").write_text(
@@ -29,7 +48,7 @@ def create_lessons() -> None:
                 {
                     "description": "",
                     "author": "fratajczak124@gmail.com",
-                    "basic_requrements": [],
+                    "basic_requirements": [],
                     "additional_requirements": [],
                     "section": "anthony explains",
                 },
@@ -45,7 +64,12 @@ def create_lessons() -> None:
             title
         ).with_suffix(".py").write_text(
             _python_template.format(
-                question_list=str(list(item.question for item in video.qas))
+                question_list=str(list(item.question for item in video.qas)).replace(
+                    " you ", " the speaker "
+                ),
+                answer_list=str(list(item.answer for item in video.qas)).replace(
+                    " you ", " the speaker "
+                ),
             )
         )
         training_material_folder = (
