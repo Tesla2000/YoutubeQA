@@ -29,6 +29,41 @@ python-versions = ">=3.7"
 frozenlist = ">=1.1.0"
 
 [[package]]
+name = "alembic"
+version = "1.13.1"
+description = "A database migration tool for SQLAlchemy."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+Mako = "*"
+SQLAlchemy = ">=1.3.0"
+typing-extensions = ">=4"
+
+[package.extras]
+tz = ["backports.zoneinfo"]
+
+[[package]]
+name = "anyio"
+version = "4.3.0"
+description = "High level compatibility layer for multiple asynchronous event loop implementations"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+exceptiongroup = {version = ">=1.0.2", markers = "python_version < \"3.11\""}
+idna = ">=2.8"
+sniffio = ">=1.1"
+typing-extensions = {version = ">=4.1", markers = "python_version < \"3.11\""}
+
+[package.extras]
+doc = ["packaging", "Sphinx (>=7)", "sphinx-rtd-theme", "sphinx-autodoc-typehints (>=1.2.0)"]
+test = ["anyio", "coverage[toml] (>=7)", "exceptiongroup (>=1.2.0)", "hypothesis (>=4.0)", "psutil (>=5.9)", "pytest (>=7.0)", "pytest-mock (>=3.6.1)", "trustme", "uvloop (>=0.17)"]
+trio = ["trio (>=0.23)"]
+
+[[package]]
 name = "async-timeout"
 version = "4.0.3"
 description = "Timeout context manager for asyncio programs"
@@ -76,25 +111,6 @@ jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
 uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
-name = "blis"
-version = "0.7.11"
-description = "The Blis BLAS-like linear algebra library, as a self-contained C-extension."
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-numpy = {version = ">=1.19.0", markers = "python_version >= \"3.9\""}
-
-[[package]]
-name = "catalogue"
-version = "2.0.10"
-description = "Super lightweight function registries for your library"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[[package]]
 name = "certifi"
 version = "2024.2.2"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -130,49 +146,12 @@ python-versions = ">=3.7"
 colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
-name = "cloudpathlib"
-version = "0.16.0"
-description = "pathlib-style classes for cloud storage services."
-category = "main"
-optional = false
-python-versions = ">=3.7"
-
-[package.dependencies]
-typing_extensions = {version = ">4", markers = "python_version < \"3.11\""}
-
-[package.extras]
-all = ["cloudpathlib", "cloudpathlib", "cloudpathlib"]
-azure = ["azure-storage-blob (>=12)"]
-gs = ["google-cloud-storage"]
-s3 = ["boto3"]
-
-[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
 category = "main"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
-
-[[package]]
-name = "confection"
-version = "0.1.4"
-description = "The sweetest config system for Python"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-pydantic = ">=1.7.4,<1.8 || >1.8,<1.8.1 || >1.8.1,<3.0.0"
-srsly = ">=2.4.0,<3.0.0"
-
-[[package]]
-name = "cymem"
-version = "2.0.8"
-description = "Manage calls to calloc/free through Cython"
-category = "main"
-optional = false
-python-versions = "*"
 
 [[package]]
 name = "dataclasses-json"
@@ -195,21 +174,12 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "doctran"
-version = "0.0.14"
-description = "Document transformation framework for vector based retrieval"
+name = "distro"
+version = "1.9.0"
+description = "Distro - an OS platform information API"
 category = "main"
 optional = false
-python-versions = ">=3.8.1,<4.0.0"
-
-[package.dependencies]
-lxml = ">=4.9.2,<5.0.0"
-openai = ">=0.27.8,<0.28.0"
-presidio-analyzer = ">=2.2.33,<3.0.0"
-presidio-anonymizer = ">=2.2.33,<3.0.0"
-pydantic = ">=1.10.9,<2.0.0"
-spacy = ">=3.5.4,<4.0.0"
-tiktoken = ">=0.5.0,<0.6.0"
+python-versions = ">=3.6"
 
 [[package]]
 name = "dynamic-executor"
@@ -218,6 +188,17 @@ description = "Module for making changes in code during runtime"
 category = "main"
 optional = false
 python-versions = ">=3.5"
+
+[[package]]
+name = "exceptiongroup"
+version = "1.2.1"
+description = "Backport of PEP 654 (exception groups)"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+test = ["pytest (>=6)"]
 
 [[package]]
 name = "filelock"
@@ -253,6 +234,53 @@ docs = ["sphinx", "furo"]
 test = ["objgraph", "psutil"]
 
 [[package]]
+name = "h11"
+version = "0.14.0"
+description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
+name = "httpcore"
+version = "1.0.5"
+description = "A minimal low-level HTTP client."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+certifi = "*"
+h11 = ">=0.13,<0.15"
+
+[package.extras]
+asyncio = ["anyio (>=4.0,<5.0)"]
+http2 = ["h2 (>=3,<5)"]
+socks = ["socksio (>=1.0.0,<2.0.0)"]
+trio = ["trio (>=0.22.0,<0.26.0)"]
+
+[[package]]
+name = "httpx"
+version = "0.27.0"
+description = "The next generation HTTP client."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+anyio = "*"
+certifi = "*"
+httpcore = ">=1.0.0,<2.0.0"
+idna = "*"
+sniffio = "*"
+
+[package.extras]
+brotli = ["brotli", "brotlicffi"]
+cli = ["click (>=8.0.0,<9.0.0)", "pygments (>=2.0.0,<3.0.0)", "rich (>=10,<14)"]
+http2 = ["h2 (>=3,<5)"]
+socks = ["socksio (>=1.0.0,<2.0.0)"]
+
+[[package]]
 name = "identify"
 version = "2.5.36"
 description = "File identification library for Python"
@@ -270,20 +298,6 @@ description = "Internationalized Domain Names in Applications (IDNA)"
 category = "main"
 optional = false
 python-versions = ">=3.5"
-
-[[package]]
-name = "jinja2"
-version = "3.1.3"
-description = "A very fast and expressive template engine."
-category = "main"
-optional = false
-python-versions = ">=3.7"
-
-[package.dependencies]
-MarkupSafe = ">=2.0"
-
-[package.extras]
-i18n = ["Babel (>=2.7)"]
 
 [[package]]
 name = "jsonpatch"
@@ -385,6 +399,19 @@ tenacity = ">=8.1.0,<9.0.0"
 extended-testing = ["jinja2 (>=3,<4)"]
 
 [[package]]
+name = "langchain-openai"
+version = "0.1.6"
+description = "An integration package connecting OpenAI and LangChain"
+category = "main"
+optional = false
+python-versions = "<4.0,>=3.8.1"
+
+[package.dependencies]
+langchain-core = ">=0.1.46,<0.2.0"
+openai = ">=1.24.0,<2.0.0"
+tiktoken = ">=0.5.2,<1"
+
+[[package]]
 name = "langchain-text-splitters"
 version = "0.0.1"
 description = "LangChain text splitting utilities"
@@ -397,21 +424,6 @@ langchain-core = ">=0.1.28,<0.2.0"
 
 [package.extras]
 extended-testing = ["lxml (>=5.1.0,<6.0.0)"]
-
-[[package]]
-name = "langcodes"
-version = "3.4.0"
-description = "Tools for labeling human languages with IETF language tags"
-category = "main"
-optional = false
-python-versions = ">=3.8"
-
-[package.dependencies]
-language-data = ">=1.2"
-
-[package.extras]
-build = ["build", "twine"]
-test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "langsmith"
@@ -427,44 +439,20 @@ pydantic = ">=1,<3"
 requests = ">=2,<3"
 
 [[package]]
-name = "language-data"
-version = "1.2.0"
-description = "Supplementary data about languages used by the langcodes module"
+name = "mako"
+version = "1.3.3"
+description = "A super-fast templating language that borrows the best ideas from the existing templating languages."
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.8"
 
 [package.dependencies]
-marisa-trie = ">=0.7.7"
+MarkupSafe = ">=0.9.2"
 
 [package.extras]
-build = ["build", "twine"]
-test = ["pytest", "pytest-cov"]
-
-[[package]]
-name = "lxml"
-version = "4.9.4"
-description = "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API."
-category = "main"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, != 3.4.*"
-
-[package.extras]
-cssselect = ["cssselect (>=0.7)"]
-html5 = ["html5lib"]
-htmlsoup = ["beautifulsoup4"]
-source = ["Cython (==0.29.37)"]
-
-[[package]]
-name = "marisa-trie"
-version = "1.1.0"
-description = "Static memory-efficient and fast Trie-like structures for Python."
-category = "main"
-optional = false
-python-versions = ">=3.7"
-
-[package.extras]
-test = ["hypothesis", "pytest", "readme-renderer"]
+testing = ["pytest"]
+babel = ["babel"]
+lingua = ["lingua"]
 
 [[package]]
 name = "markupsafe"
@@ -497,14 +485,6 @@ description = "multidict implementation"
 category = "main"
 optional = false
 python-versions = ">=3.7"
-
-[[package]]
-name = "murmurhash"
-version = "1.0.10"
-description = "Cython bindings for MurmurHash"
-category = "main"
-optional = false
-python-versions = ">=3.6"
 
 [[package]]
 name = "mypy"
@@ -551,22 +531,23 @@ python-versions = ">=3.9"
 
 [[package]]
 name = "openai"
-version = "0.27.10"
-description = "Python client library for the OpenAI API"
+version = "1.25.1"
+description = "The official Python library for the openai API"
 category = "main"
 optional = false
 python-versions = ">=3.7.1"
 
 [package.dependencies]
-aiohttp = "*"
-requests = ">=2.20"
-tqdm = "*"
+anyio = ">=3.5.0,<5"
+distro = ">=1.7.0,<2"
+httpx = ">=0.23.0,<1"
+pydantic = ">=1.9.0,<3"
+sniffio = "*"
+tqdm = ">4"
+typing-extensions = ">=4.7,<5"
 
 [package.extras]
-datalib = ["numpy", "pandas (>=1.2.3)", "pandas-stubs (>=1.1.0.11)", "openpyxl (>=3.0.7)"]
-dev = ["black (>=21.6b0,<22.0.0)", "pytest (>=6.0.0,<7.0.0)", "pytest-asyncio", "pytest-mock"]
-embeddings = ["scikit-learn (>=1.0.2)", "tenacity (>=8.0.1)", "matplotlib", "plotly", "numpy", "scipy", "pandas (>=1.2.3)", "pandas-stubs (>=1.1.0.11)", "openpyxl (>=3.0.7)"]
-wandb = ["wandb", "numpy", "pandas (>=1.2.3)", "pandas-stubs (>=1.1.0.11)", "openpyxl (>=3.0.7)"]
+datalib = ["numpy (>=1)", "pandas-stubs (>=1.1.0.11)", "pandas (>=1.2.3)"]
 
 [[package]]
 name = "orjson"
@@ -591,14 +572,6 @@ description = "Utility library for gitignore style pattern matching of file path
 category = "main"
 optional = false
 python-versions = ">=3.8"
-
-[[package]]
-name = "phonenumbers"
-version = "8.13.35"
-description = "Python version of Google's common library for parsing, formatting, storing and validating international phone numbers."
-category = "main"
-optional = false
-python-versions = "*"
 
 [[package]]
 name = "platformdirs"
@@ -629,63 +602,12 @@ pyyaml = ">=5.1"
 virtualenv = ">=20.10.0"
 
 [[package]]
-name = "preshed"
-version = "3.0.9"
-description = "Cython hash table that trusts the keys are pre-hashed"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-cymem = ">=2.0.2,<2.1.0"
-murmurhash = ">=0.28.0,<1.1.0"
-
-[[package]]
-name = "presidio-analyzer"
-version = "2.2.354"
-description = "Presidio analyzer package"
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-phonenumbers = ">=8.12,<9.0.0"
-pyyaml = "*"
-regex = "*"
-spacy = ">=3.4.4,<4.0.0"
-tldextract = "*"
-
-[package.extras]
-azure-ai-language = ["azure-ai-textanalytics", "azure-core"]
-stanza = ["stanza", "spacy-stanza"]
-transformers = ["spacy-huggingface-pipelines"]
-
-[[package]]
-name = "presidio-anonymizer"
-version = "2.2.354"
-description = "Persidio Anonymizer package - replaces analyzed text with desired values."
-category = "main"
-optional = false
-python-versions = ">=3.5"
-
-[package.dependencies]
-pycryptodome = ">=3.10.1"
-
-[[package]]
 name = "psycopg2-binary"
 version = "2.9.9"
 description = "psycopg2 - Python-PostgreSQL Database Adapter"
 category = "main"
 optional = false
 python-versions = ">=3.7"
-
-[[package]]
-name = "pycryptodome"
-version = "3.20.0"
-description = "Cryptographic library for Python"
-category = "main"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "pydantic"
@@ -748,17 +670,6 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
-name = "requests-file"
-version = "2.0.0"
-description = "File transport adapter for Requests"
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-requests = ">=1.0.0"
-
-[[package]]
 name = "scrapetube"
 version = "2.5.1"
 description = "Scrape youtube without the official youtube api and without selenium."
@@ -771,94 +682,12 @@ requests = "*"
 typing-extensions = "*"
 
 [[package]]
-name = "smart-open"
-version = "6.4.0"
-description = "Utils for streaming large files (S3, HDFS, GCS, Azure Blob Storage, gzip, bz2...)"
-category = "main"
-optional = false
-python-versions = ">=3.6,<4.0"
-
-[package.extras]
-all = ["boto3", "google-cloud-storage (>=2.6.0)", "azure-storage-blob", "azure-common", "azure-core", "requests", "paramiko"]
-azure = ["azure-storage-blob", "azure-common", "azure-core"]
-gcs = ["google-cloud-storage (>=2.6.0)"]
-http = ["requests"]
-s3 = ["boto3"]
-ssh = ["paramiko"]
-test = ["boto3", "google-cloud-storage (>=2.6.0)", "azure-storage-blob", "azure-common", "azure-core", "requests", "paramiko", "moto", "responses", "pytest", "pytest-rerunfailures"]
-webhdfs = ["requests"]
-
-[[package]]
-name = "spacy"
-version = "3.7.4"
-description = "Industrial-strength Natural Language Processing (NLP) in Python"
+name = "sniffio"
+version = "1.3.1"
+description = "Sniff out which async library your code is running under"
 category = "main"
 optional = false
 python-versions = ">=3.7"
-
-[package.dependencies]
-catalogue = ">=2.0.6,<2.1.0"
-cymem = ">=2.0.2,<2.1.0"
-jinja2 = "*"
-langcodes = ">=3.2.0,<4.0.0"
-murmurhash = ">=0.28.0,<1.1.0"
-numpy = {version = ">=1.19.0", markers = "python_version >= \"3.9\""}
-packaging = ">=20.0"
-preshed = ">=3.0.2,<3.1.0"
-pydantic = ">=1.7.4,<1.8 || >1.8,<1.8.1 || >1.8.1,<3.0.0"
-requests = ">=2.13.0,<3.0.0"
-smart-open = ">=5.2.1,<7.0.0"
-spacy-legacy = ">=3.0.11,<3.1.0"
-spacy-loggers = ">=1.0.0,<2.0.0"
-srsly = ">=2.4.3,<3.0.0"
-thinc = ">=8.2.2,<8.3.0"
-tqdm = ">=4.38.0,<5.0.0"
-typer = ">=0.3.0,<0.10.0"
-wasabi = ">=0.9.1,<1.2.0"
-weasel = ">=0.1.0,<0.4.0"
-
-[package.extras]
-apple = ["thinc-apple-ops (>=0.1.0.dev0,<1.0.0)"]
-cuda = ["cupy (>=5.0.0b4,<13.0.0)"]
-cuda-autodetect = ["cupy-wheel (>=11.0.0,<13.0.0)"]
-cuda100 = ["cupy-cuda100 (>=5.0.0b4,<13.0.0)"]
-cuda101 = ["cupy-cuda101 (>=5.0.0b4,<13.0.0)"]
-cuda102 = ["cupy-cuda102 (>=5.0.0b4,<13.0.0)"]
-cuda110 = ["cupy-cuda110 (>=5.0.0b4,<13.0.0)"]
-cuda111 = ["cupy-cuda111 (>=5.0.0b4,<13.0.0)"]
-cuda112 = ["cupy-cuda112 (>=5.0.0b4,<13.0.0)"]
-cuda113 = ["cupy-cuda113 (>=5.0.0b4,<13.0.0)"]
-cuda114 = ["cupy-cuda114 (>=5.0.0b4,<13.0.0)"]
-cuda115 = ["cupy-cuda115 (>=5.0.0b4,<13.0.0)"]
-cuda116 = ["cupy-cuda116 (>=5.0.0b4,<13.0.0)"]
-cuda117 = ["cupy-cuda117 (>=5.0.0b4,<13.0.0)"]
-cuda11x = ["cupy-cuda11x (>=11.0.0,<13.0.0)"]
-cuda12x = ["cupy-cuda12x (>=11.5.0,<13.0.0)"]
-cuda80 = ["cupy-cuda80 (>=5.0.0b4,<13.0.0)"]
-cuda90 = ["cupy-cuda90 (>=5.0.0b4,<13.0.0)"]
-cuda91 = ["cupy-cuda91 (>=5.0.0b4,<13.0.0)"]
-cuda92 = ["cupy-cuda92 (>=5.0.0b4,<13.0.0)"]
-ja = ["sudachipy (>=0.5.2,!=0.6.1)", "sudachidict-core (>=20211220)"]
-ko = ["natto-py (>=0.9.0)"]
-lookups = ["spacy-lookups-data (>=1.0.3,<1.1.0)"]
-th = ["pythainlp (>=2.0)"]
-transformers = ["spacy-transformers (>=1.1.2,<1.4.0)"]
-
-[[package]]
-name = "spacy-legacy"
-version = "3.0.12"
-description = "Legacy registered functions for spaCy backwards compatibility"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[[package]]
-name = "spacy-loggers"
-version = "1.0.5"
-description = "Logging utilities for SpaCy"
-category = "main"
-optional = false
-python-versions = ">=3.6"
 
 [[package]]
 name = "sqlalchemy"
@@ -899,17 +728,6 @@ aiosqlite = ["greenlet (!=0.4.17)", "aiosqlite", "typing_extensions (!=3.10.0.1)
 sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
-name = "srsly"
-version = "2.4.8"
-description = "Modern high-performance serialization utilities for Python"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-catalogue = ">=2.0.3,<2.1.0"
-
-[[package]]
 name = "tenacity"
 version = "8.2.3"
 description = "Retry code until it succeeds"
@@ -921,54 +739,8 @@ python-versions = ">=3.7"
 doc = ["reno", "sphinx", "tornado (>=4.5)"]
 
 [[package]]
-name = "thinc"
-version = "8.2.3"
-description = "A refreshing functional take on deep learning, compatible with your favorite libraries"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-blis = ">=0.7.8,<0.8.0"
-catalogue = ">=2.0.4,<2.1.0"
-confection = ">=0.0.1,<1.0.0"
-cymem = ">=2.0.2,<2.1.0"
-murmurhash = ">=1.0.2,<1.1.0"
-numpy = {version = ">=1.19.0", markers = "python_version >= \"3.9\""}
-packaging = ">=20.0"
-preshed = ">=3.0.2,<3.1.0"
-pydantic = ">=1.7.4,<1.8 || >1.8,<1.8.1 || >1.8.1,<3.0.0"
-srsly = ">=2.4.0,<3.0.0"
-wasabi = ">=0.8.1,<1.2.0"
-
-[package.extras]
-cuda = ["cupy (>=5.0.0b4)"]
-cuda-autodetect = ["cupy-wheel (>=11.0.0)"]
-cuda100 = ["cupy-cuda100 (>=5.0.0b4)"]
-cuda101 = ["cupy-cuda101 (>=5.0.0b4)"]
-cuda102 = ["cupy-cuda102 (>=5.0.0b4)"]
-cuda110 = ["cupy-cuda110 (>=5.0.0b4)"]
-cuda111 = ["cupy-cuda111 (>=5.0.0b4)"]
-cuda112 = ["cupy-cuda112 (>=5.0.0b4)"]
-cuda113 = ["cupy-cuda113 (>=5.0.0b4)"]
-cuda114 = ["cupy-cuda114 (>=5.0.0b4)"]
-cuda115 = ["cupy-cuda115 (>=5.0.0b4)"]
-cuda116 = ["cupy-cuda116 (>=5.0.0b4)"]
-cuda117 = ["cupy-cuda117 (>=5.0.0b4)"]
-cuda11x = ["cupy-cuda11x (>=11.0.0)"]
-cuda12x = ["cupy-cuda12x (>=11.5.0)"]
-cuda80 = ["cupy-cuda80 (>=5.0.0b4)"]
-cuda90 = ["cupy-cuda90 (>=5.0.0b4)"]
-cuda91 = ["cupy-cuda91 (>=5.0.0b4)"]
-cuda92 = ["cupy-cuda92 (>=5.0.0b4)"]
-datasets = ["ml-datasets (>=0.2.0,<0.3.0)"]
-mxnet = ["mxnet (>=1.5.1,<1.6.0)"]
-tensorflow = ["tensorflow (>=2.0.0,<2.6.0)"]
-torch = ["torch (>=1.6.0)"]
-
-[[package]]
 name = "tiktoken"
-version = "0.5.2"
+version = "0.6.0"
 description = "tiktoken is a fast BPE tokeniser for use with OpenAI's models"
 category = "main"
 optional = false
@@ -980,24 +752,6 @@ requests = ">=2.26.0"
 
 [package.extras]
 blobfile = ["blobfile (>=2)"]
-
-[[package]]
-name = "tldextract"
-version = "5.1.2"
-description = "Accurately separates a URL's subdomain, domain, and public suffix, using the Public Suffix List (PSL). By default, this includes the public ICANN TLDs and their exceptions. You can optionally support the Public Suffix List's private domains as well."
-category = "main"
-optional = false
-python-versions = ">=3.8"
-
-[package.dependencies]
-filelock = ">=3.0.8"
-idna = "*"
-requests = ">=2.1.0"
-requests-file = ">=1.4"
-
-[package.extras]
-release = ["build", "twine"]
-testing = ["black", "mypy", "pytest", "pytest-gitignore", "pytest-mock", "responses", "ruff", "syrupy", "tox", "types-filelock", "types-requests"]
 
 [[package]]
 name = "tomli"
@@ -1023,24 +777,6 @@ dev = ["pytest (>=6)", "pytest-cov", "pytest-timeout", "pytest-xdist"]
 notebook = ["ipywidgets (>=6)"]
 slack = ["slack-sdk"]
 telegram = ["requests"]
-
-[[package]]
-name = "typer"
-version = "0.9.4"
-description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-click = ">=7.1.1,<9.0.0"
-typing-extensions = ">=3.7.4.3"
-
-[package.extras]
-all = ["colorama (>=0.4.3,<0.5.0)", "shellingham (>=1.3.0,<2.0.0)", "rich (>=10.11.0,<14.0.0)"]
-dev = ["autoflake (>=1.3.1,<2.0.0)", "flake8 (>=3.8.3,<4.0.0)", "pre-commit (>=2.17.0,<3.0.0)"]
-doc = ["mkdocs (>=1.1.2,<2.0.0)", "mkdocs-material (>=8.1.4,<9.0.0)", "mdx-include (>=1.4.1,<2.0.0)", "pillow (>=9.3.0,<10.0.0)", "cairosvg (>=2.5.2,<3.0.0)"]
-test = ["shellingham (>=1.3.0,<2.0.0)", "pytest (>=4.4.0,<8.0.0)", "pytest-cov (>=2.10.0,<5.0.0)", "coverage (>=6.2,<7.0)", "pytest-xdist (>=1.32.0,<4.0.0)", "pytest-sugar (>=0.9.4,<0.10.0)", "mypy (==0.971)", "black (>=22.3.0,<23.0.0)", "isort (>=5.0.6,<6.0.0)", "rich (>=10.11.0,<14.0.0)"]
 
 [[package]]
 name = "typing-extensions"
@@ -1094,36 +830,6 @@ docs = ["furo (>=2023.7.26)", "proselint (>=0.13)", "sphinx (>=7.1.2,!=7.3)", "s
 test = ["covdefaults (>=2.3)", "coverage-enable-subprocess (>=1)", "coverage (>=7.2.7)", "flaky (>=3.7)", "packaging (>=23.1)", "pytest-env (>=0.8.2)", "pytest-freezer (>=0.4.8)", "pytest-mock (>=3.11.1)", "pytest-randomly (>=3.12)", "pytest-timeout (>=2.1)", "pytest (>=7.4)", "setuptools (>=68)", "time-machine (>=2.10)"]
 
 [[package]]
-name = "wasabi"
-version = "1.1.2"
-description = "A lightweight console printing and formatting toolkit"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-colorama = {version = ">=0.4.6", markers = "sys_platform == \"win32\" and python_version >= \"3.7\""}
-
-[[package]]
-name = "weasel"
-version = "0.3.4"
-description = "Weasel: A small and easy workflow system"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-cloudpathlib = ">=0.7.0,<0.17.0"
-confection = ">=0.0.4,<0.2.0"
-packaging = ">=20.0"
-pydantic = ">=1.7.4,<1.8 || >1.8,<1.8.1 || >1.8.1,<3.0.0"
-requests = ">=2.13.0,<3.0.0"
-smart-open = ">=5.2.1,<7.0.0"
-srsly = ">=2.4.3,<3.0.0"
-typer = ">=0.3.0,<0.10.0"
-wasabi = ">=0.9.1,<1.2.0"
-
-[[package]]
 name = "yarl"
 version = "1.9.4"
 description = "Yet another URL library"
@@ -1149,49 +855,46 @@ requests = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "9b242e4e3a99b98cbc4fa4e5ba66a19de8c637f1a792fb888aadd7998aa39727"
+content-hash = "1bf741e6b452488e7d90ddbdb4f874e6edb8b825081e42eb6e65855bd027441b"
 
 [metadata.files]
 aiohttp = []
 aiosignal = []
+alembic = []
+anyio = []
 async-timeout = []
 attrs = []
 black = []
-blis = []
-catalogue = []
 certifi = []
 cfgv = []
 charset-normalizer = []
 click = []
-cloudpathlib = []
 colorama = []
-confection = []
-cymem = []
 dataclasses-json = []
 distlib = []
-doctran = []
+distro = []
 dynamic-executor = []
+exceptiongroup = []
 filelock = []
 frozenlist = []
 greenlet = []
+h11 = []
+httpcore = []
+httpx = []
 identify = []
 idna = []
-jinja2 = []
 jsonpatch = []
 jsonpointer = []
 langchain = []
 langchain-community = []
 langchain-core = []
+langchain-openai = []
 langchain-text-splitters = []
-langcodes = []
 langsmith = []
-language-data = []
-lxml = []
-marisa-trie = []
+mako = []
 markupsafe = []
 marshmallow = []
 multidict = []
-murmurhash = []
 mypy = []
 mypy-extensions = []
 nodeenv = []
@@ -1200,39 +903,24 @@ openai = []
 orjson = []
 packaging = []
 pathspec = []
-phonenumbers = []
 platformdirs = []
 pre-commit = []
-preshed = []
-presidio-analyzer = []
-presidio-anonymizer = []
 psycopg2-binary = []
-pycryptodome = []
 pydantic = []
 python-dotenv = []
 pyyaml = []
 regex = []
 requests = []
-requests-file = []
 scrapetube = []
-smart-open = []
-spacy = []
-spacy-legacy = []
-spacy-loggers = []
+sniffio = []
 sqlalchemy = []
-srsly = []
 tenacity = []
-thinc = []
 tiktoken = []
-tldextract = []
 tomli = []
 tqdm = []
-typer = []
 typing-extensions = []
 typing-inspect = []
 urllib3 = []
 virtualenv = []
-wasabi = []
-weasel = []
 yarl = []
 youtube-transcript-api = []

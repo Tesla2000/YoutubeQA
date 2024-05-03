@@ -15,8 +15,9 @@ python-dotenv = "^1.0.1"
 SQLAlchemy = {extras = ["mypy"], version = "^2.0.29"}
 tqdm = "^4.66.2"
 langchain = "^0.1.17"
-doctran = "^0.0.14"
 scrapetube = "^2.5.1"
+alembic = "^1.13.1"
+langchain-openai = "^0.1.6"
 
 [tool.poetry.dev-dependencies]
 

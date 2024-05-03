@@ -33,6 +33,7 @@ def add_questions_and_answers(videos: Optional[Sequence[Video]] = None) -> None:
         for thread in threads:
             thread.join()
         session.commit()
+        pass
 
 
 def _get_videos() -> Sequence[Video]:

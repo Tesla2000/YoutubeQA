@@ -3,3 +3,4 @@
 /.idea
 /.env
 /output_lessons/
+/migrations/versions/

@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from itertools import chain
 
-from langchain_community.document_transformers import DoctranQATransformer
+from langchain_community.chat_models import ChatOpenAI
+from langchain_core.prompts import PromptTemplate
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sqlalchemy import select
 
@@ -11,8 +12,19 @@ from database.Entities import Text
 from database.Entities import Video
 from database.session import session
 
-_llm = DoctranQATransformer(openai_api_model="gpt-3.5-turbo")
-_splitter = RecursiveCharacterTextSplitter(chunk_size=4000)
+_prompt = PromptTemplate.from_template(
+    """Given a transcript of youtube video create question-answer pairs. 
+Questions and answers must be related strictly to programing topics.\n
+Return a JSON object with questions as keys and answers aa values.\n
+Return at most 10 pairs.\nTRANSCRIPT:\n
+```{text}```\n
+QUESTION_ANSWER_PAIRS:\n"""
+)
+_llm = ChatOpenAI(temperature=0.1, model_name="gpt-3.5-turbo-16k")
+_chain = _prompt | _llm
+_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=14000, chunk_overlap=100, length_function=_llm.get_num_tokens
+)
 
 
 def _add_questions_and_answers(video: Video) -> None:
@@ -20,13 +32,15 @@ def _add_questions_and_answers(video: Video) -> None:
         return
     video_text = _extract_text(video.id)
     docs = _splitter.create_documents([video_text])
-    qa_docs = _llm.transform_documents(docs)
-    question_answer_pairs = tuple(
-        chain.from_iterable(doc.metadata["questions_and_answers"] for doc in qa_docs)
-    )
+    question_answer_pairs = _chain.invoke({"text": docs}).content
+    raw_qas: dict[str, str] = eval(question_answer_pairs.replace('"\n', '",\n'))
+    if "Q1" in raw_qas:
+        raw_qas = dict(
+            (raw_qas[f"Q{i}"], raw_qas[f"A{i}"])
+            for i in range(1, 1 + len(raw_qas) // 2)
+        )
     qas = list(
-        QA(question=pair["question"], answer=pair["answer"])
-        for pair in question_answer_pairs
+        QA(question=question, answer=answer) for question, answer in raw_qas.items()
     )
     session.add_all(qas)
     video.qas = qas

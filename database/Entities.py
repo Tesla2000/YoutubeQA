@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import List
 
+from sqlalchemy import Boolean
 from sqlalchemy import Computed
 from sqlalchemy import Float
 from sqlalchemy import ForeignKey
@@ -53,6 +54,7 @@ class QA(Base):
     )
     question: Mapped[str] = mapped_column("question", String)
     answer: Mapped[str] = mapped_column("answer", String)
+    approved: Mapped[bool] = mapped_column("approved", Boolean, default=True)
 
     video_id: Mapped[str] = mapped_column(ForeignKey("video.id"), init=False)
     video: Mapped[Video] = relationship(back_populates="qas", init=False)
