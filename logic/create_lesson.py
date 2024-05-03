@@ -64,12 +64,8 @@ def create_lessons() -> None:
             title
         ).with_suffix(".py").write_text(
             _python_template.format(
-                question_list=str(list(item.question for item in video.qas)).replace(
-                    " you ", " the speaker "
-                ),
-                answer_list=str(list(item.answer for item in video.qas)).replace(
-                    " you ", " the speaker "
-                ),
+                question_list=_conv_fun(list(item.question for item in video.qas)),
+                answer_list=_conv_fun(list(item.answer for item in video.qas)),
             )
         )
         training_material_folder = (
@@ -90,6 +86,14 @@ def create_lessons() -> None:
                 indent=2,
             )
         )
+
+
+def _conv_fun(string_list: list[str]) -> str:
+    return (
+        str(string_list)
+        .replace(" you are ", " the speaker is ")
+        .replace(" you ", " the speaker ")
+    )
 
 
 if __name__ == "__main__":
